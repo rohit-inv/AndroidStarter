@@ -1,26 +1,23 @@
 package com.invictus.starter
 
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.navigation.createGraph
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.fragment
 import com.invictus.starter.databinding.ActivityMainBinding
-import com.invictus.starter.ui.screen.compose.ComposeFragment
-import com.invictus.starter.ui.screen.mail.MailFragment
+import com.invictus.starter.ui.navigation.createNavGraph
 
-
-sealed class Screen {
-
-}
 
 class MainActivity : AppCompatActivity() {
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,17 +34,25 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-        navController.graph = navController.createGraph(startDestination = "mails") {
-            fragment<MailFragment>("mails") {
-                label = "Mails"
-            }
-            fragment<ComposeFragment>("compose") {
-                label = "Compose"
-            }
+        navController = navHostFragment.navController
+        navController.graph = createNavGraph(navController)
+        onBackPressedDispatcher.addCallback(
+            this@MainActivity,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (!navController.navigateUp()) {
+                        moveTaskToBack(true)
+                    }
+                }
 
-        }
+            })
 
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        Log.d("MainActivity", "onSupportNavigateUp: ")
+        return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
 
 }

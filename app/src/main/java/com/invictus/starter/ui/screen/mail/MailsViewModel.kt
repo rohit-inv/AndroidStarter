@@ -4,17 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.invictus.starter.data.reposiotory.MailRepositoryImpl
-import com.invictus.starter.domain.model.MailModel
+import com.invictus.starter.di.AppModule
 import com.invictus.starter.domain.repository.MailRepository
+import com.invictus.starter.ui.recycler_utils.RModel
 import kotlinx.coroutines.launch
 
 class MailsViewModel : ViewModel() {
-    private val mailRepository: MailRepository = MailRepositoryImpl.INSTANCE
+    private val mailRepository: MailRepository = AppModule.mailRepository
 
 
-    private val _mails = MutableLiveData<List<MailModel>>()
-    val mails: LiveData<List<MailModel>> = _mails
+    private val _mails = MutableLiveData<List<RModel>>()
+    val mails: LiveData<List<RModel>> = _mails
 
     init {
         loadMails()
@@ -22,7 +22,7 @@ class MailsViewModel : ViewModel() {
 
     private fun loadMails() {
         viewModelScope.launch {
-            _mails.postValue(mailRepository.getAllMail())
+            _mails.postValue(mailRepository.getHomePage())
         }
     }
 

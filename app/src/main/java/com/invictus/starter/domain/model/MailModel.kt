@@ -3,6 +3,7 @@ package com.invictus.starter.domain.model
 import androidx.annotation.ColorInt
 
 data class MailModel(
+    val id: Int,
     val name: String,
     val subject: String,
     val body: String,
