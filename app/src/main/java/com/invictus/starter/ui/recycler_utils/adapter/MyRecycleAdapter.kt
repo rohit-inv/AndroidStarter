@@ -2,76 +2,112 @@ package com.invictus.starter.ui.recycler_utils.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.invictus.starter.databinding.HeaderLayoutBinding
 import com.invictus.starter.databinding.MailLayoutBinding
 import com.invictus.starter.domain.model.MailModel
-import com.invictus.starter.ui.recycler_utils.RModel
+import com.invictus.starter.ui.recycler_utils.Header
+import com.invictus.starter.ui.recycler_utils.RecyclerModel
 import com.invictus.starter.ui.recycler_utils.view_holder.BaseViewHolder
 import com.invictus.starter.ui.recycler_utils.view_holder.HeaderViewHolder
 import com.invictus.starter.ui.recycler_utils.view_holder.MailViewHolder
 
 
-class MyRecycleAdapter : RecyclerView.Adapter<BaseViewHolder>() {
-    private val diffUtil = object : DiffUtil.ItemCallback<RModel>() {
-        override fun areItemsTheSame(oldItem: RModel, newItem: RModel): Boolean {
-            return oldItem.type == newItem.type && oldItem.id == newItem.id
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class MyRecycleAdapter :
+    ListAdapter<RecyclerModel, BaseViewHolder<RecyclerModel>>(DIFF_CALLBACK) {
+
+    private var onItemClickListener: ((RecyclerModel) -> Unit)? = null
+    fun setOnItemClickListener(listener: (RecyclerModel) -> Unit) {
+        onItemClickListener = listener
+    }
+
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<RecyclerModel>() {
+            override fun areItemsTheSame(oldItem: RecyclerModel, newItem: RecyclerModel): Boolean {
+                return oldItem.areItemsTheSame(newItem)
+            }
+
+            override fun areContentsTheSame(
+                oldItem: RecyclerModel,
+                newItem: RecyclerModel
+            ): Boolean {
+                return oldItem.areContentsTheSame(newItem)
+            }
+
         }
-
-        override fun areContentsTheSame(oldItem: RModel, newItem: RModel): Boolean {
-            return oldItem == newItem
-        }
-    }
-    private val asyncListDiffer = AsyncListDiffer(this, diffUtil)
-    private var onItemClickListener: ((MailModel) -> Unit)? = null
-
-
-    fun setOnItemClickListener(listener: (MailModel) -> Unit) {
-        this.onItemClickListener = listener
     }
 
-    fun saveData(items: List<RModel>) {
-        asyncListDiffer.submitList(items)
-    }
-
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
-            : BaseViewHolder {
+    @Suppress("UNCHECKED_CAST")
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): BaseViewHolder<RecyclerModel> {
+        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            0 -> HeaderViewHolder(
+            1 -> HeaderViewHolder(
                 HeaderLayoutBinding.inflate(
-                    LayoutInflater.from(parent.context),
+                    inflater,
                     parent,
                     false
                 )
+            ) as BaseViewHolder<RecyclerModel>
 
-            )
-
-            1 -> MailViewHolder(
-                MailLayoutBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-            )
+            2 -> MailViewHolder(
+                MailLayoutBinding.inflate(inflater, parent, false)
+            ) as BaseViewHolder<RecyclerModel>
 
             else -> throw IllegalArgumentException("Invalid view type")
         }
+    }
 
+    override fun onBindViewHolder(holder: BaseViewHolder<RecyclerModel>, position: Int) {
+        val model = currentList[position]
+        holder.setOnItemClickListener {
+            onItemClickListener?.invoke(model)
+        }
+        holder.bind(model)
     }
 
     override fun getItemViewType(position: Int): Int {
-        return asyncListDiffer.currentList[position].type
+        return when (currentList[position]) {
+            is Header -> 1
+            is MailModel -> 2
+            else -> 0
+        }
     }
 
-    override fun getItemCount(): Int {
-        return asyncListDiffer.currentList.size
-    }
-
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        val model = asyncListDiffer.currentList[position]
-        holder.bind(model)
-    }
 }
+
+
+
+
+

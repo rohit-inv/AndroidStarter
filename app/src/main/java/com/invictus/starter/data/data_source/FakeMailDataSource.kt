@@ -4,7 +4,7 @@ import com.invictus.starter.domain.model.MailModel
 
 object FakeMailDataSource {
 
-    private val mailList = mutableListOf(
+    private val mailList = listOf(
         MailModel(
             id = 1,
             name = "Alice Smith",
@@ -46,17 +46,20 @@ object FakeMailDataSource {
             color = 0xFFBA68C8.toInt() // Light Purple
         )
     )
+    private val m = (mailList + mailList + mailList).mapIndexed { index, model ->
+        model.copy(id = index + 1)
+    }.toMutableList()
 
     fun getAllMails(): List<MailModel> {
-        return mailList + mailList + mailList
+        return m
     }
 
     fun getMailById(id: Int): MailModel? {
-        return mailList.find { it.id == id }
+        return m.find { it.id == id }
     }
 
     fun composeMail(mailModel: MailModel) {
-        mailList.add(mailModel)
+        m.add(mailModel)
     }
 
 

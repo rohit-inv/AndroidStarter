@@ -4,15 +4,14 @@ import com.invictus.starter.data.data_source.FakeMailDataSource
 import com.invictus.starter.domain.model.MailModel
 import com.invictus.starter.domain.repository.MailRepository
 import com.invictus.starter.ui.recycler_utils.Header
-import com.invictus.starter.ui.recycler_utils.Mail
-import com.invictus.starter.ui.recycler_utils.RModel
+import com.invictus.starter.ui.recycler_utils.RecyclerModel
 
 class MailRepositoryImpl(
     private val mailDataSource: FakeMailDataSource
 ) : MailRepository {
 
-    override suspend fun getHomePage(): List<RModel> {
-        return listOf(Header("Header", 0)) + getAllMail().map { Mail(it) }
+    override suspend fun getHomePage(): List<RecyclerModel> {
+        return listOf(Header("Header")) + getAllMail()
     }
 
     override suspend fun getAllMail(): List<MailModel> {

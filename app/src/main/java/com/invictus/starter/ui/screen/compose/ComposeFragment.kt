@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.invictus.starter.databinding.FragmentComposeBinding
 
 class ComposeFragment : Fragment() {
@@ -27,16 +27,9 @@ class ComposeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val counter: Button = binding.counter
-
-        viewModel.count.observe(viewLifecycleOwner) { count ->
-            counter.text = count.toString()
-        }
-
-        counter.setOnClickListener {
-            viewModel.count.postValue(
-                (viewModel.count.value ?: 0) + 1
-            )
+        val navController = findNavController()
+        binding.toolbar.backBtn.setOnClickListener {
+            navController.navigateUp()
         }
 
     }

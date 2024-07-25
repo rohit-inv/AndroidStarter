@@ -6,15 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.invictus.starter.di.AppModule
 import com.invictus.starter.domain.repository.MailRepository
-import com.invictus.starter.ui.recycler_utils.RModel
+import com.invictus.starter.ui.recycler_utils.RecyclerModel
 import kotlinx.coroutines.launch
 
 class MailsViewModel : ViewModel() {
     private val mailRepository: MailRepository = AppModule.mailRepository
 
 
-    private val _mails = MutableLiveData<List<RModel>>()
-    val mails: LiveData<List<RModel>> = _mails
+    private val _mails = MutableLiveData<List<RecyclerModel>>()
+    val mails: LiveData<List<RecyclerModel>> = _mails
 
     init {
         loadMails()

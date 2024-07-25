@@ -1,7 +1,6 @@
 package com.invictus.starter
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -27,15 +26,25 @@ class MainActivity : AppCompatActivity() {
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            v.setPadding(
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
+                systemBars.bottom.coerceAtLeast(ime.bottom)
+            )
             insets
         }
 
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+
+
         navController = navHostFragment.navController
         navController.graph = createNavGraph(navController)
+
+
         onBackPressedDispatcher.addCallback(
             this@MainActivity,
             object : OnBackPressedCallback(true) {
@@ -50,7 +59,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        Log.d("MainActivity", "onSupportNavigateUp: ")
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
