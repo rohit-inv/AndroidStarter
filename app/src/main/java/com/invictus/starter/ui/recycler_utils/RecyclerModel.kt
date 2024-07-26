@@ -1,6 +1,5 @@
 package com.invictus.starter.ui.recycler_utils
 
-
 interface RecyclerModel {
     override fun equals(other: Any?): Boolean
 
@@ -20,11 +19,4 @@ interface RecyclerModel {
      * */
     fun areContentsTheSame(other: RecyclerModel): Boolean =
         javaClass == other.javaClass && this == other
-}
-
-
-data class Header(val name: String) : RecyclerModel {
-    override fun areItemsTheSame(other: RecyclerModel): Boolean {
-        return other is Header && name == other.name
-    }
 }

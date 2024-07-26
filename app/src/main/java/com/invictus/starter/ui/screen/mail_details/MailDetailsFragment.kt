@@ -30,8 +30,8 @@ class MailDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val navController = findNavController()
 
-
         viewModel.loadMailById(arguments?.getInt("mailId") ?: -1)
+
         binding.toolbar.backBtn.setOnClickListener {
             navController.navigateUp()
         }
@@ -41,6 +41,7 @@ class MailDetailsFragment : Fragment() {
             binding.errorText.isVisible = error != null
             binding.errorText.text = error ?: ""
             mail?.let {
+                binding.toolbar.label.text = mail.subject
                 binding.name.text = mail.name
                 binding.logoText.text = mail.name.take(1)
                 binding.subject.text = mail.subject

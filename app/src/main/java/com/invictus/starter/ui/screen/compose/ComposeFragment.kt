@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.invictus.starter.R
 import com.invictus.starter.databinding.FragmentComposeBinding
 
 class ComposeFragment : Fragment() {
@@ -28,6 +29,9 @@ class ComposeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navController = findNavController()
+
+        binding.toolbar.label.text = requireContext().getString(R.string.compose)
+
         binding.toolbar.backBtn.setOnClickListener {
             navController.navigateUp()
         }
